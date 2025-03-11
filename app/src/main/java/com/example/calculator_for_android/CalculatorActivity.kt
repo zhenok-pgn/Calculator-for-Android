@@ -45,7 +45,7 @@ class CalculatorActivity : AppCompatActivity() {
 
             // Обработка нажатия на стрелку назад
             toolbar.setNavigationOnClickListener {
-                onBackPressed()
+                finish()
             }
         }
     }
@@ -72,7 +72,7 @@ class CalculatorActivity : AppCompatActivity() {
         when ( val buttonText = button.text.toString()) {
             "=" -> inputField.setText(calculator.calculateResult())
             "C" -> inputField.setText(calculator.clearInput())
-            "←" -> onBackPressed()
+            "←" -> finish()
             else -> inputField.setText(calculator.appendToInput(buttonText))
         }
     }

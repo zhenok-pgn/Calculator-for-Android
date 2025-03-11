@@ -58,6 +58,10 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, CalculatorActivity::class.java)
             startActivity(intent)
             overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)}
-        findViewById<Button>(R.id.toGraphic).setOnClickListener{finishAffinity()}
+        findViewById<Button>(R.id.toGraphic).setOnClickListener{
+            val intent = Intent(this, GraphicActivity::class.java)
+            startActivity(intent)
+            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+        }
     }
 }
