@@ -30,24 +30,7 @@ class CalculatorActivity : AppCompatActivity() {
         // Создаем экземпляр калькулятора
         calculator = Calculator()
 
-        setToolbar()
         setButtonClickListeners()
-    }
-
-    private fun setToolbar() {
-        val toolbar = findViewById<Toolbar>(R.id.toolbar)
-        if(toolbar != null){
-            setSupportActionBar(toolbar)
-
-            // Включаем стрелку назад
-            supportActionBar?.setDisplayHomeAsUpEnabled(true)
-            supportActionBar?.setDisplayShowHomeEnabled(true)
-
-            // Обработка нажатия на стрелку назад
-            toolbar.setNavigationOnClickListener {
-                finish()
-            }
-        }
     }
 
     private fun setButtonClickListeners() {
@@ -61,7 +44,7 @@ class CalculatorActivity : AppCompatActivity() {
 
         for (id in buttonIds) {
             val button = findViewById<Button>(id)
-            button?.setOnClickListener(this::onButtonClick)
+            button.setOnClickListener(this::onButtonClick)
         }
     }
 

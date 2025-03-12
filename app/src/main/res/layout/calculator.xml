@@ -6,21 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp"
-    tools:context=".MainActivity"
-    android:orientation="vertical">
-
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="0dp"
-        android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
-        android:elevation="4dp"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        app:title="Калькулятор"
-        app:navigationIcon="?attr/homeAsUpIndicator"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+    tools:context=".MainActivity">
 
     <!-- Поле для вывода выражения -->
     <EditText
@@ -36,19 +22,59 @@
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar"/>
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/gridLayout" /> <!-- Привязка к GridLayout -->
 
     <!-- Кнопки для цифр и операторов -->
     <GridLayout
         android:id="@+id/gridLayout"
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:columnCount="4"
         android:rowCount="5"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/inputField">
+        android:useDefaultMargins="true">
+
+        <!-- Кнопка для возврата на MainActivity -->
+        <Button
+            android:id="@+id/btnBack"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"
+            android:text="←"
+            android:textSize="24sp" />
+
+        <!-- Кнопки для скобок -->
+        <Button
+            android:id="@+id/btnOpenBracket"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"
+            android:text="("
+            android:textSize="24sp" />
+
+        <Button
+            android:id="@+id/btnCloseBracket"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"
+            android:text=")"
+            android:textSize="24sp" />
+
+        <!-- Кнопка для очистки -->
+        <Button
+            android:id="@+id/btnClear"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"
+            android:text="C"
+            android:textSize="24sp" />
 
         <!-- Кнопки для цифр и операторов -->
         <Button
@@ -193,35 +219,6 @@
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
             android:text="+"
-            android:textSize="24sp" />
-
-        <!-- Кнопки для скобок -->
-        <Button
-            android:id="@+id/btnOpenBracket"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_rowWeight="1"
-            android:layout_columnWeight="1"
-            android:text="("
-            android:textSize="24sp" />
-
-        <Button
-            android:id="@+id/btnCloseBracket"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_rowWeight="1"
-            android:layout_columnWeight="1"
-            android:text=")"
-            android:textSize="24sp" />
-
-        <!-- Кнопка для очистки -->
-        <Button
-            android:id="@+id/btnClear"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_rowWeight="1"
-            android:layout_columnWeight="1"
-            android:text="C"
             android:textSize="24sp" />
 
     </GridLayout>

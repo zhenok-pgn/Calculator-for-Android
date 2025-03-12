@@ -47,9 +47,20 @@ class GraphicActivity : AppCompatActivity() {
             strokeWidth = 1f
         }
 
+        private val axisPaint = Paint().apply {
+            color = Color.CYAN
+            strokeWidth = 2f
+        }
+
         private val graphPaint = Paint().apply {
             color = Color.RED
             strokeWidth = 3f
+        }
+
+        private val textPaint = Paint().apply {
+            color = Color.CYAN
+            textSize = 20f
+
         }
 
         override fun onDraw(canvas: Canvas) {
@@ -81,25 +92,33 @@ class GraphicActivity : AppCompatActivity() {
                 canvas.drawLine(0f, y, width, y, gridPaint)
                 y += step
             }
+
+            // Абсцисса и ордината
+            canvas.drawLine(width / 2, 0f, width / 2, height, axisPaint)
+            canvas.drawLine(0f, height / 2, width, height / 2, axisPaint)
         }
 
         private fun drawSinGraph(canvas: Canvas, width: Float, height: Float) {
             val centerY = height / 2 // Центр по оси Y
-            val amplitude = 100f // Амплитуда синуса
-            val period = 2 * Math.PI // Период синуса
-            val scaleX = width / (4 * Math.PI.toFloat()) // Масштаб по оси X
+            val scale = 100f // Масштаб графика
+            val stepLenX = 5f / scale // Размер шага по Ox (Детализация функции)
 
-            var prevX = 0f
-            var prevY = centerY
+            var prevDrawPointX = 0f
+            var prevDrawPointY = centerY
 
-            for (i in 0..1000) {
-                val x = i * scaleX
-                val y = centerY - (kotlin.math.sin(2 * i.toFloat()) + kotlin.math.cos(3 * i.toFloat()))
+            val stepCountX = (width / scale / stepLenX).toInt()
+            for (i in 0..stepCountX) {
+                val x = (i - stepCountX / 2) * stepLenX
+                val y = kotlin.math.sin(2 * x) + kotlin.math.cos(3 * x)
 
-                canvas.drawLine(prevX, prevY, x, y, graphPaint)
+                val drawPointX = i * stepLenX * scale
+                val drawPointY = centerY - y * scale
+                canvas.drawLine(prevDrawPointX, prevDrawPointY, drawPointX, drawPointY, graphPaint)
+                if(x % (50f / scale) == 0f)
+                    canvas.drawText(x.toString(), drawPointX, centerY, textPaint)
 
-                prevX = x
-                prevY = y
+                prevDrawPointX = drawPointX
+                prevDrawPointY = drawPointY
             }
         }
     }
