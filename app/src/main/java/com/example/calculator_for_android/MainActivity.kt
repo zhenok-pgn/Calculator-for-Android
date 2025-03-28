@@ -35,7 +35,7 @@ class MainActivity : AppCompatActivity() {
             stop = false
         }
         if (stop) {
-            showErrorMessage("Несовместимое устройство! ($display.widthPixels x $display.heightPixels)")
+            showErrorMessage("Несовместимое устройство!")
         }
     }
 

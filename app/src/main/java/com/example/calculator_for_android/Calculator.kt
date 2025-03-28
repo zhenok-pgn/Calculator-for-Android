@@ -19,7 +19,7 @@ class Calculator {
     fun calculateResult(): String {
         return try {
             val expression = currentExpression.toString()
-            val result = eval(expression) // Вычисляем результат
+            val result = eval(expression)
             currentExpression.setLength(0)
             currentExpression.append(result)
             result.toString()

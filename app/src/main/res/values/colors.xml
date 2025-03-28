@@ -2,4 +2,7 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <color name="background_color">#FFFFFF</color> <!-- Светлый фон -->
+    <color name="text_color">#000000</color> <!-- Темный текст -->
 </resources>

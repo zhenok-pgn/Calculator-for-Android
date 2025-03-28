@@ -4,7 +4,9 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
+import android.graphics.PointF
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.FrameLayout
@@ -14,6 +16,10 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 
 class GraphicActivity : AppCompatActivity() {
+    private lateinit var dbHelper: DatabaseHelper
+    private val scale = 100f // Масштаб графика
+    private val stepLenX = 5f / scale // Размер шага по Ox (Детализация функции)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -23,6 +29,8 @@ class GraphicActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
+        dbHelper = DatabaseHelper(this)
 
         // Устанавливаем кастомный View для Canvas
         findViewById<FrameLayout>(R.id.canvasView).addView(GraphView(this))
@@ -63,21 +71,58 @@ class GraphicActivity : AppCompatActivity() {
 
         }
 
+        private  val extremePaint = Paint().apply {
+            color = Color.WHITE
+            strokeWidth = 20f
+        }
+
         override fun onDraw(canvas: Canvas) {
             super.onDraw(canvas)
 
-            val width = width.toFloat()
-            val height = height.toFloat()
-
             // Рисуем координатную сетку
-            drawGrid(canvas, width, height)
+            drawGrid(canvas)
 
-            // Рисуем график функции y = sin(x)
-            drawSinGraph(canvas, width, height)
+            // Очистка бд
+            dbHelper.clearTable()
+            // Рисуем график функции
+            drawSinGraph(canvas)
+
+            // рисуем экстремумы
+            val extremes = findExtremes(dbHelper.getAllPoints())
+            drawExtremes(extremes, canvas)
         }
 
-        private fun drawGrid(canvas: Canvas, width: Float, height: Float) {
+        private fun findExtremes(points: List<PointF>): List<PointF> {
+            val extremes = mutableListOf<PointF>()
+            for (i in 1 until points.size - 1) {
+                val yPrev = points[i - 1].y
+                val yCurr = points[i].y
+                val yNext = points[i + 1].y
+
+                if ((yCurr > yPrev && yCurr > yNext) || (yCurr < yPrev && yCurr < yNext)) {
+                    extremes.add(PointF(points[i].x, yCurr))
+                }
+            }
+            return extremes
+        }
+
+        private  fun drawExtremes(points: List<PointF>, canvas: Canvas){
+            val centerY = height / 2
+            val stepCountX = (width.toFloat() / scale / stepLenX).toInt()
+            for (point in points){
+                val i = (point.x + stepCountX * stepLenX / 2) / stepLenX
+
+                val drawPointX = i * stepLenX * scale
+                val drawPointY = centerY - point.y * scale
+
+                canvas.drawPoint(drawPointX, drawPointY, extremePaint)
+            }
+        }
+
+        private fun drawGrid(canvas: Canvas) {
             val step = 30f // Шаг сетки
+            val height = height.toFloat()
+            val width = width.toFloat()
 
             // Вертикальные линии
             var x = 0f
@@ -98,10 +143,10 @@ class GraphicActivity : AppCompatActivity() {
             canvas.drawLine(0f, height / 2, width, height / 2, axisPaint)
         }
 
-        private fun drawSinGraph(canvas: Canvas, width: Float, height: Float) {
-            val centerY = height / 2 // Центр по оси Y
-            val scale = 100f // Масштаб графика
-            val stepLenX = 5f / scale // Размер шага по Ox (Детализация функции)
+        private fun drawSinGraph(canvas: Canvas) {
+            val height = height.toFloat()
+            val width = width.toFloat()
+            val centerY = height / 2
 
             var prevDrawPointX = 0f
             var prevDrawPointY = centerY
@@ -110,6 +155,9 @@ class GraphicActivity : AppCompatActivity() {
             for (i in 0..stepCountX) {
                 val x = (i - stepCountX / 2) * stepLenX
                 val y = kotlin.math.sin(2 * x) + kotlin.math.cos(3 * x)
+
+                // добавить в бд
+                dbHelper.insertPoint(x.toDouble(), y.toDouble())
 
                 val drawPointX = i * stepLenX * scale
                 val drawPointY = centerY - y * scale
